@@ -5,3 +5,7 @@ D:\repos\CharpBASICS_HW\ArcheyGame\ArcheyGame\ConsoleApp1\obj\Debug\ArcheyGame.c
 D:\repos\CharpBASICS_HW\ArcheyGame\ArcheyGame\ConsoleApp1\obj\Debug\ArcheyGame.csproj.CoreCompileInputs.cache
 D:\repos\CharpBASICS_HW\ArcheyGame\ArcheyGame\ConsoleApp1\obj\Debug\ConsoleApp1.exe
 D:\repos\CharpBASICS_HW\ArcheyGame\ArcheyGame\ConsoleApp1\obj\Debug\ConsoleApp1.pdb
+d:\repos\CharpBASICS_HW\ArcheyGame\ArcheyGame\ConsoleApp1\bin\Debug\BaseLib.dll
+d:\repos\CharpBASICS_HW\ArcheyGame\ArcheyGame\ConsoleApp1\bin\Debug\itextsharp.dll
+d:\repos\CharpBASICS_HW\ArcheyGame\ArcheyGame\ConsoleApp1\bin\Debug\SVG.dll
+d:\repos\CharpBASICS_HW\ArcheyGame\ArcheyGame\ConsoleApp1\bin\Debug\itextsharp.xml
