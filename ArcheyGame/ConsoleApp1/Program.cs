@@ -23,10 +23,10 @@ namespace ArcheyGame
         {
             Console.WriteLine("\nEach player has a life points of 3 and a set of arrows of 3, as well.");
             Console.WriteLine("There is some distance between the two players(initially 5). The bigger this disance, the harder to hit your target. In each round, players can choose from:");
-            Console.WriteLine("\n1. Create an arrow(max number of arrows 12)\n2. Move closer(this reduces the distance between the two players; min distance: 1)\n3. Move further a unit(increasing the distance between the two players)\n4. Shooting; This reduces the number of arrows and, if the opponent is hit, his points are reduced.\nThe probability of shooting success is inversely proportional to the distance.");
+            Console.WriteLine("\n1. Creating an arrow(max number of arrows 12)\n2. Moving closer(this reduces the distance between the two players; min distance: 1)\n3. Moving further away a unit(increasing the distance between the two players)\n4. Shooting; This reduces the number of arrows and, if the opponent is hit, his points are reduced.\nThe probability of shooting success is inversely proportional to the distance.");
             Console.WriteLine("\nHere's how to play:\n");
-            Console.WriteLine("\nThe two players choose something from each round, from the options above. After they determined the number of turns, \nthey play until the game is over");
-            Console.WriteLine("\nor either player is defeated (their life points are reduced to 0 or below).");
+            Console.WriteLine("\nThe two players choose from the options above, taking turns. A game round is over when all player took his/her turn. After they determined the number of turns, \nthey play until the game is over");
+            Console.WriteLine("\nOR \neither player is defeated (their life points are reduced to 0).");
             Console.WriteLine("\nPress a key to continue...");
             Console.ReadKey();
             Console.Clear();
@@ -107,27 +107,38 @@ namespace ArcheyGame
                 Player1Turn(_p1, _p2, ref distance, pvpMenuSelection, menuItem, i);
                 if (_p1.Winner)
                 {
-                    Console.WriteLine("\nThe winner is: " + _p1.Name + ". CONGRATULATIONS ! ! !");
-                    Thread.Sleep(2500);
                     break;
                 }
                 Player2Turn(_p1, _p2, ref distance, pvpMenuSelection, menuItem, i);
                 if (_p2.Winner)
                 {
-                    Console.WriteLine("\nThe winner is: " + _p2.Name + ". CONGRATULATIONS ! ! !");
-                    Thread.Sleep(2500);
                     break;
                 }
             }
-            if (_p1.PlayerLifePoints > _p2.PlayerLifePoints)
+            if (_p1.Winner)
             {
-                Console.WriteLine("\nThe winner is: " + _p1.Name + ". CONGRATULATIONS ! ! !");
-                Thread.Sleep(2500);
+                Console.WriteLine("\nThe winner is: " + _p1.Name + ". CONGRATULATIONS ! ! !\nThis battle is over. Back to Main Menu...");
+                Thread.Sleep(3600);
+            }
+            else if (_p2.Winner)
+            {
+                Console.WriteLine("\nThe winner is: " + _p2.Name + ". CONGRATULATIONS ! ! !\nThis battle is over. Back to Main Menu...");
+                Thread.Sleep(3600);
+            }
+            else if (_p1.PlayerLifePoints > _p2.PlayerLifePoints)
+            {
+                Console.WriteLine("\nThe winner is: " + _p1.Name + ". CONGRATULATIONS ! ! !\nThis battle is over. Back to Main Menu...");
+                Thread.Sleep(3600);
+            }
+            else if (_p1.PlayerLifePoints < _p2.PlayerLifePoints)
+            {
+                Console.WriteLine("\nThe winner is: " + _p2.Name + ". CONGRATULATIONS ! ! !\nThis battle is over. Back to Main Menu...");
+                Thread.Sleep(3600);
             }
             else
             {
-                Console.WriteLine("\nThe winner is: " + _p2.Name + ". CONGRATULATIONS ! ! !");
-                Thread.Sleep(2500);
+                Console.WriteLine("\nIt's a draw...\nThis battle is over. Back to Main Menu...");
+                Thread.Sleep(3600);
             }
         }
         internal static void Player1Turn(Player _p1, Player _p2,  ref byte _distance, bool _pvpMenuSelection, int _menuItem, int _i)
@@ -174,7 +185,9 @@ namespace ArcheyGame
                         }
                         else
                         {
+                            Console.WriteLine("You have created an arrow.");
                             _p1.Arrows++;
+                            Thread.Sleep(3600);
                         }
                     }
                     break;
@@ -187,13 +200,17 @@ namespace ArcheyGame
                         }
                         else
                         {
+                            Console.WriteLine("You have moved closer to your enemy.");
                             _distance--;
+                            Thread.Sleep(3600);
                         }
                     }
                     break;
                 case 3:
                     {
+                        Console.WriteLine("You have moved away from enemy.");
                         _distance++;
+                        Thread.Sleep(3600);
                     }
                     break;
                 case 4:
@@ -216,15 +233,22 @@ namespace ArcheyGame
             //ha még így is egy határérték fölé esik az eredmény (75%), akkor a lövés talál
             Random rnd = new Random();
             double hit = (rnd.Next(70, 100)) - (1.7 * _distance);
-            if (hit >= 75)
+            if (_p1.Arrows == 0)
+            {
+                Console.WriteLine("\n" + _p1.Name + " tries to fire, but has no arrow... Missed the turn...");
+                Thread.Sleep(3500);
+            }
+            else if (hit >= 75)
             {
                 Console.WriteLine("\nTarget is HIT!");
+                _p1.Arrows--;
                 _p2.PlayerLifePoints--;
                 Thread.Sleep(2000);
             }
             else
             {
                 Console.WriteLine("\nIt's a miss... :(");
+                _p1.Arrows--;
                 Thread.Sleep(2000);
             }
             return;
@@ -272,8 +296,10 @@ namespace ArcheyGame
                         }
                         else
                         {
+                            Console.WriteLine("You have created an arrow.");
                             _p2.Arrows++;
-                        }
+                            Thread.Sleep(3600);
+                         }
                     }
                     break;
                 case 2:
@@ -285,13 +311,17 @@ namespace ArcheyGame
                         }
                         else
                         {
+                            Console.WriteLine("You have moved closer to the enemy.");
                             _distance--;
+                            Thread.Sleep(3600);
                         }
                     }
                     break;
                 case 3:
                     {
+                        Console.WriteLine("You have moved away from your enemy.");
                         _distance++;
+                        Thread.Sleep(3600);
                     }
                     break;
                 case 4:
@@ -314,20 +344,27 @@ namespace ArcheyGame
             //ha még így is egy határérték fölé esik az eredmény (75%), akkor a lövés talál
             Random rnd = new Random();
             double hit = (rnd.Next(70, 100)) - (1.7 * _distance);
-            if (hit >= 75)
+            if (_p2.Arrows == 0)
+            {
+                Console.WriteLine("\n" + _p2.Name + " tries to fire, but has no arrow... Missed the turn...");
+                Thread.Sleep(3500);
+            }
+            else if (hit >= 75)
             {
                 Console.WriteLine("\nTarget is HIT!");
+                _p2.Arrows--;
                 _p1.PlayerLifePoints--;
                 Thread.Sleep(2000);
             }
             else
             {
                 Console.WriteLine("\nIt's a miss... :(");
+                _p2.Arrows--;
                 Thread.Sleep(2000);
             }
             return;
         }
-        internal static byte PvESetup()
+        internal static void PvESetup()
         {
             Player p1 = new Player();
             AI a1 = new AI();
@@ -377,18 +414,157 @@ namespace ArcheyGame
                 }
                 catch (Exception)
                 {
-                    Console.WriteLine("\nPlease, enter a valid number (1 - 255) for your game rounds! . . .  ");
+                    Console.WriteLine("\nPlease, enter a valid number (3 - 255) for your game rounds! . . .  ");
                     gameRoundIsValid = false;
                 }
-                if (gameRounds == 0)
+                if (gameRounds < 3)
                 {
                     gameRoundIsValid = false;
-                    Console.WriteLine("Cannot play for 0 or less rounds... Enter the number again:");
+                    Console.WriteLine("Cannot play for 2 or less rounds... Enter the number again:");
                 }
             } while (!gameRoundIsValid);
-            return gameRounds;
             ////////////////////////////////////////////////////////////////////////////////////////////////////
             //Harc kezdete , Battle függvény...
+            Battle_PvE(gameRounds, p1, a1);
+        }
+        internal static void AITurn(Player _p1, AI _a1, ref byte _distance, int _menuItem, int _i)
+        {
+            Console.WriteLine("<-- * <-- * <-- * <-- * <-- * <-- * <--");
+            Console.WriteLine(_i + ". ROUND:\n" + "\nPrepare yourself, " + _a1.Name + ", it is your turn!");
+            Console.WriteLine("_______________________________________");
+            Console.WriteLine("\nDistance from enemy: " + _distance + "\nLifepoints: " + _a1.PlayerLifePoints + "\nArrows: " + _a1.Arrows + "\nWhat will you do?:");
+            Console.WriteLine("_______________________________________");
+            Console.WriteLine("\n1) Create an arrow (max. 12)");
+            Console.WriteLine("2) Move 1 Unit closer to enemy (Cannot go closer than 1 Unit)");
+            Console.WriteLine("3) Move 1 Unit further from enemy");
+            Console.WriteLine("4) Shoot\n");
+            Console.WriteLine("--> * --> * --> * --> * --> * --> * -->");
+            Random rnd = new Random();
+            _menuItem = rnd.Next(1, 5);
+            switch (_menuItem)
+            {
+                case 1:
+                    {
+                        if (_p1.Arrows == 12)
+                        {
+                            Console.WriteLine("The quiver is full already. " + _a1.Name +  " simply missed its turn...");
+                            Thread.Sleep(3600);
+                        }
+                        else
+                        {
+                            Console.WriteLine("\n" + _a1.Name + " has created an arrow!");
+                            _a1.Arrows++;
+                            Thread.Sleep(3500);
+                        }
+                    }
+                    break;
+                case 2:
+                    {
+                        if (_distance == 1)
+                        {
+                            Console.WriteLine(_a1.Name + " is too close to you. It has simply missed its turn...");
+                            Thread.Sleep(3600);
+                        }
+                        else
+                        {
+                            Console.WriteLine("\n" + _a1.Name + " is moving closer to you!");
+                            _distance--;
+                            Thread.Sleep(3500);
+                        }
+                    }
+                    break;
+                case 3:
+                    {
+                        Console.WriteLine("\n" + _a1.Name + " is moving away from you!");
+                        _distance++;
+                        Thread.Sleep(3500);
+                    }
+                    break;
+                case 4:
+                    {
+                        AIShot(_p1, _a1, _distance);
+                    }
+                    break;
+            }
+            if (_p1.PlayerLifePoints == 0)
+            {
+                Console.WriteLine(_p1.Name + "\n is killed... Game is over!");
+                Thread.Sleep(2500);
+                _a1.Winner = true;
+            }
+            Console.Clear();
+        }
+        internal static void AIShot(Player _p1, AI _a1, byte _distance)
+        {
+            //lövés kiszámolása: minél nagyobb a távolság annál többet vonunk le a random számból,
+            //ha még így is egy határérték fölé esik az eredmény (75%), akkor a lövés talál
+            Random rnd = new Random();
+            double hit = (rnd.Next(70, 100)) - (1.7 * _distance);
+            if (_a1.Arrows == 0)
+            {
+                Console.WriteLine("\n" + _a1.Name + " tries to fire, but has no arrow... Missed the turn...");
+                Thread.Sleep(3500);
+            }
+            else if (hit >= 75)
+            {
+                Console.WriteLine("\nTarget is HIT!");
+                _a1.Arrows--;
+                _p1.PlayerLifePoints--;
+                Thread.Sleep(3500);
+            }
+            else
+            {
+                Console.WriteLine("\nIt's a miss... :(");
+                _a1.Arrows--;
+                Thread.Sleep(3500);
+            }
+            return;
+        }
+        internal static void Battle_PvE(byte _gameRounds, Player _p1, AI _a1)
+        {
+            Console.Clear();
+            //a két játékos távolságának távolság beállítása
+            byte distance = 5;
+            bool pvpMenuSelection = false;
+            int menuItem = 1;
+            for (int i = 1; i <= _gameRounds; i++)
+            {
+                Player1Turn(_p1, _a1, ref distance, pvpMenuSelection, menuItem, i);
+                if (_p1.Winner)
+                {
+                    break;
+                }
+                AITurn(_p1, _a1, ref distance, menuItem, i);
+                if (_a1.Winner)
+                {
+                    break;
+                }
+            }
+            if (_p1.Winner)
+            {
+                Console.WriteLine("\nThe winner is: " + _p1.Name + ". CONGRATULATIONS ! ! !\nThis battle is over. Back to Main Menu...");
+                Thread.Sleep(3600);
+            }
+            else if (_a1.Winner)
+            {
+                Console.WriteLine("\nThe winner is: " + _a1.Name + ". CONGRATULATIONS ! ! !\nThis battle is over. Back to Main Menu...");
+                Thread.Sleep(3600);
+            }
+            else if (_p1.PlayerLifePoints > _a1.PlayerLifePoints)
+            {
+                Console.WriteLine("\nThe winner is: " + _p1.Name + ". CONGRATULATIONS ! ! !\nThis battle is over. Back to Main Menu...");
+                Thread.Sleep(3600);
+            }
+            else if (_p1.PlayerLifePoints < _a1.PlayerLifePoints)
+            {
+                Console.WriteLine("\nThe winner is: " + _a1.Name + ". CONGRATULATIONS ! ! !\nThis battle is over. Back to Main Menu...");
+                Thread.Sleep(3600);
+            }
+            else
+            {
+                Console.WriteLine("\nIt's a draw...\nThis battle is over. Back to Main Menu...");
+                Thread.Sleep(3600);
+            }
         }
         internal static byte EvESetup()
         {
