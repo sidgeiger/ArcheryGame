@@ -31,13 +31,13 @@ namespace ArcheyGame
             Console.ReadKey();
             Console.Clear();
         }
-        internal void PvPSetup(byte _gameRounds)
+        internal static void PvPSetup()
         {
             Player p1 = new Player();
             Player p2 = new Player();
-            _gameRounds = 1;
             bool namesAreValid;
             bool gameRoundIsValid;
+            byte gameRounds = 3;
             Console.Clear();
             Console.WriteLine("\nPlayer 1, please enter your name (minimum 1 character):");
             do
@@ -76,7 +76,7 @@ namespace ArcheyGame
             {
                 try
                 {
-                    _gameRounds = Convert.ToByte(Console.ReadLine());
+                    gameRounds = Convert.ToByte(Console.ReadLine());
                     gameRoundIsValid = true;
                 }
                 catch (Exception)
@@ -84,7 +84,7 @@ namespace ArcheyGame
                     Console.WriteLine("\nPlease, enter a valid number (3 - 255) for your game rounds! . . .  ");
                     gameRoundIsValid = false;
                 }
-                if (_gameRounds < 3)
+                if (gameRounds < 3)
                 {
                     gameRoundIsValid = false;
                     Console.WriteLine("You cannot play for 2 or less rounds... Enter the number again:");
@@ -92,10 +92,10 @@ namespace ArcheyGame
             } while (!gameRoundIsValid);
             ////////////////////////////////////////////////////////////////////////////////////////////////////
             //Harc kezdete , Battle függvény...
-            Battle_PvP(_gameRounds, p1, p2);
+            Battle_PvP(gameRounds, p1, p2);
             return;
         }
-        internal void Battle_PvP(byte _gameRounds, Player _p1, Player _p2)
+        internal static void Battle_PvP(byte _gameRounds, Player _p1, Player _p2)
         {
             Console.Clear();
             //a két játékos távolságának távolság beállítása
@@ -126,13 +126,13 @@ namespace ArcheyGame
                 Console.WriteLine("\nThe winner is: " + _p2.Name + "CONGRATULATIONS ! ! !");
             }
         }
-        internal void Player1Turn(Player _p1, Player _p2, byte _distance, bool _pvpMenuSelection, int _menuItem, int _i)
+        internal static void Player1Turn(Player _p1, Player _p2, byte _distance, bool _pvpMenuSelection, int _menuItem, int _i)
         {
             Console.Clear();
             Console.WriteLine("<-- * <-- * <-- * <-- * <-- * <-- * <--");
             Console.WriteLine(_i + ". ROUND:\n" + "\nPrepare yourself, " + _p1.Name + ", it is your turn!");
             Console.WriteLine("_______________________________________");
-            Console.WriteLine("\nDistance from enemy: " + _distance + "\n Lifepoints: " + _p1.PlayerLifePoints + "\n What will you do?:\n");
+            Console.WriteLine("\nDistance from enemy: " + _distance + "\nLifepoints: " + _p1.PlayerLifePoints + "\nArrows: " + _p1.Arrows  + "\nWhat will you do?:");
             Console.WriteLine("_______________________________________");
             Console.WriteLine("\n1) Create an arrow (max. 12)");
             Console.WriteLine("2) Move 1 Unit closer to enemy (Cannot go closer than 1 Unit)");
@@ -144,6 +144,15 @@ namespace ArcheyGame
                 try
                 {
                     _pvpMenuSelection = int.TryParse(Console.ReadLine(), out _menuItem);
+                    if (0 < _menuItem && _menuItem < 5)
+                    {
+                        Console.WriteLine("\nOk...\n");
+                    }
+                    else
+                    {
+                        _pvpMenuSelection = false;
+                        Console.WriteLine("\nThis is not a valid option (1/2/3/4)!\n");
+                    }
                 }
                 catch (Exception)
                 {
@@ -192,8 +201,9 @@ namespace ArcheyGame
                 Console.WriteLine(_p2.Name + "\n is killed... Game is over!");
                 _p1.Winner = true;
             }
+            Console.Clear();
         }
-        internal void Player1Shot(Player _p1, Player _p2, byte _distance)
+        internal static void Player1Shot(Player _p1, Player _p2, byte _distance)
         {
             //lövés kiszámolása: minél nagyobb a távolság annál többet vonunk le a random számból,
             //ha még így is egy határérték fölé esik az eredmény (75%), akkor a lövés talál
@@ -206,12 +216,12 @@ namespace ArcheyGame
             }
             return;
         }
-        internal void Player2Turn(Player _p1, Player _p2, byte _distance, bool _pvpMenuSelection, int _menuItem, int _i)
+        internal static void Player2Turn(Player _p1, Player _p2, byte _distance, bool _pvpMenuSelection, int _menuItem, int _i)
         {
             Console.WriteLine("<-- * <-- * <-- * <-- * <-- * <-- * <--");
             Console.WriteLine(_i + ". ROUND:\n" + "\nPrepare yourself, " + _p2.Name + ", it is your turn!");
             Console.WriteLine("_______________________________________");
-            Console.WriteLine("\nDistance from enemy: " + _distance + "\n Lifepoints: " + _p2.PlayerLifePoints + "\n What will you do?:\n");
+            Console.WriteLine("\nDistance from enemy: " + _distance + "\nLifepoints: " + _p2.PlayerLifePoints + "\nArrows: " + _p2.Arrows + "\nWhat will you do?:");
             Console.WriteLine("_______________________________________");
             Console.WriteLine("\n1) Create an arrow (max. 12)");
             Console.WriteLine("2) Move 1 Unit closer to enemy (Cannot go closer than 1 Unit)");
@@ -223,6 +233,15 @@ namespace ArcheyGame
                 try
                 {
                     _pvpMenuSelection = int.TryParse(Console.ReadLine(), out _menuItem);
+                    if (0 < _menuItem && _menuItem < 5)
+                    {
+                        Console.WriteLine("\nOk...\n");
+                    }
+                    else
+                    {
+                        _pvpMenuSelection = false;
+                        Console.WriteLine("\nThis is not a valid option (1/2/3/4)!\n");
+                    }
                 }
                 catch (Exception)
                 {
@@ -271,8 +290,9 @@ namespace ArcheyGame
                 Console.WriteLine(_p1.Name + "\n is killed... Game is over!");
                 _p2.Winner = true;
             }
+            Console.Clear();
         }
-        internal void Player2Shot(Player _p1, Player _p2, byte _distance)
+        internal static void Player2Shot(Player _p1, Player _p2, byte _distance)
         {
             //lövés kiszámolása: minél nagyobb a távolság annál többet vonunk le a random számból,
             //ha még így is egy határérték fölé esik az eredmény (75%), akkor a lövés talál
@@ -285,11 +305,11 @@ namespace ArcheyGame
             }
             return;
         }
-        internal static byte PvESetup(out byte _gameRounds)
+        internal static byte PvESetup()
         {
             Player p1 = new Player();
             AI a1 = new AI();
-            _gameRounds = 1;
+            byte gameRounds = 3;
             bool namesAreValid;
             bool gameRoundIsValid;
             //byte gameRounds = 0;
@@ -330,7 +350,7 @@ namespace ArcheyGame
             {
                 try
                 {
-                    _gameRounds = Convert.ToByte(Console.ReadLine());
+                    gameRounds = Convert.ToByte(Console.ReadLine());
                     gameRoundIsValid = true;
                 }
                 catch (Exception)
@@ -338,21 +358,21 @@ namespace ArcheyGame
                     Console.WriteLine("\nPlease, enter a valid number (1 - 255) for your game rounds! . . .  ");
                     gameRoundIsValid = false;
                 }
-                if (_gameRounds == 0)
+                if (gameRounds == 0)
                 {
                     gameRoundIsValid = false;
                     Console.WriteLine("Cannot play for 0 or less rounds... Enter the number again:");
                 }
             } while (!gameRoundIsValid);
-            return _gameRounds;
+            return gameRounds;
             ////////////////////////////////////////////////////////////////////////////////////////////////////
             //Harc kezdete , Battle függvény...
         }
-        internal static byte EvESetup(out byte _gameRounds)
+        internal static byte EvESetup()
         {
             AI a1 = new AI();
             AI a2 = new AI();
-            _gameRounds = 1;
+            byte gameRounds = 3;
             bool namesAreValid;
             bool gameRoundIsValid;
             //byte gameRounds = 0;
@@ -393,7 +413,7 @@ namespace ArcheyGame
             {
                 try
                 {
-                    _gameRounds = Convert.ToByte(Console.ReadLine());
+                    gameRounds = Convert.ToByte(Console.ReadLine());
                     gameRoundIsValid = true;
                 }
                 catch (Exception)
@@ -401,13 +421,13 @@ namespace ArcheyGame
                     Console.WriteLine("\nPlease, enter a valid number (1 - 255) for your game rounds! . . .  ");
                     gameRoundIsValid = false;
                 }
-                if (_gameRounds == 0)
+                if (gameRounds == 0)
                 {
                     gameRoundIsValid = false;
                     Console.WriteLine("Cannot play for 0 or less rounds... Enter the number again:");
                 }
             } while (!gameRoundIsValid);
-            return _gameRounds;
+            return gameRounds;
             ////////////////////////////////////////////////////////////////////////////////////////////////////
             //Harc kezdete , Battle függvény...
         }
@@ -418,7 +438,7 @@ namespace ArcheyGame
             bool isGameOn = true;
             bool validGameOption = false;
             string menuSelection = string.Empty;
-            byte gameRounds = 3;
+            //byte gameRounds = 3;
             do
             {
                 Console.WriteLine("\nPlease, choose an option:");
@@ -444,7 +464,7 @@ namespace ArcheyGame
                         //New game : players must input their names and a battle commences
                         Console.Clear();
                         Console.WriteLine("\nNew game: PvP Mode!");
-                        PvPSetup(_gameRounds);
+                        PvPSetup();
                         ////////////////////////////////////////////////////////////////////////////////////////////////////
                         //Harc kezdete , Battle függvény
                         Console.Clear();
@@ -456,7 +476,7 @@ namespace ArcheyGame
                         ///New game : players must input their names and a battle commences
                         Console.Clear();
                         Console.WriteLine("\nNew game PvE Mode!");
-                        PvESetup(out gameRounds);
+                        PvESetup();
                         Console.ReadLine();
                         Console.Clear();
                     }
@@ -466,7 +486,7 @@ namespace ArcheyGame
                         //writing a the rules on screen
                         Console.Clear();
                         Console.WriteLine("\nNew game EvE Mode!");
-                        EvESetup(out gameRounds);
+                        EvESetup();
                         Console.Clear();
                     }
                     else if (menuSelection == "4")

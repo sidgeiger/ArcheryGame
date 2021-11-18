@@ -7,8 +7,8 @@ using System.Threading;
 namespace ArcheyGame
 {
     //The strategy game is a two-player archery game.A player has:
-    //TODO Batte method and its functions: menu selection, handling expetions and user inputs
-    //TODO There is some distance between the two players (initially 5).
+    //TODO Batte method and its functions for PVE and EVE modes: menu selection, handling expetions and user inputs
+    //TODO in PvP Mode variables are NOT overwritten properly AFTER 1st round...
     class Program
     {
         internal class Player
@@ -104,29 +104,33 @@ namespace ArcheyGame
             int menuItem = 1;
             for (int i = 1; i <= _gameRounds; i++)
             {
-                Player1Turn(_p1, _p2, distance, pvpMenuSelection, menuItem, i);
+                Player1Turn(_p1, _p2, ref distance, pvpMenuSelection, menuItem, i);
                 if (_p1.Winner)
                 {
-                    Console.WriteLine("\nThe winner is: " + _p1.Name + "CONGRATULATIONS ! ! !");
+                    Console.WriteLine("\nThe winner is: " + _p1.Name + ". CONGRATULATIONS ! ! !");
+                    Thread.Sleep(2500);
                     break;
                 }
-                Player2Turn(_p1, _p2, distance, pvpMenuSelection, menuItem, i);
+                Player2Turn(_p1, _p2, ref distance, pvpMenuSelection, menuItem, i);
                 if (_p2.Winner)
                 {
-                    Console.WriteLine("\nThe winner is: " + _p2.Name + "CONGRATULATIONS ! ! !");
+                    Console.WriteLine("\nThe winner is: " + _p2.Name + ". CONGRATULATIONS ! ! !");
+                    Thread.Sleep(2500);
                     break;
                 }
             }
             if (_p1.PlayerLifePoints > _p2.PlayerLifePoints)
             {
-                Console.WriteLine("\nThe winner is: " + _p1.Name + "CONGRATULATIONS ! ! !");
+                Console.WriteLine("\nThe winner is: " + _p1.Name + ". CONGRATULATIONS ! ! !");
+                Thread.Sleep(2500);
             }
             else
             {
-                Console.WriteLine("\nThe winner is: " + _p2.Name + "CONGRATULATIONS ! ! !");
+                Console.WriteLine("\nThe winner is: " + _p2.Name + ". CONGRATULATIONS ! ! !");
+                Thread.Sleep(2500);
             }
         }
-        internal static void Player1Turn(Player _p1, Player _p2, byte _distance, bool _pvpMenuSelection, int _menuItem, int _i)
+        internal static void Player1Turn(Player _p1, Player _p2,  ref byte _distance, bool _pvpMenuSelection, int _menuItem, int _i)
         {
             Console.Clear();
             Console.WriteLine("<-- * <-- * <-- * <-- * <-- * <-- * <--");
@@ -166,6 +170,7 @@ namespace ArcheyGame
                         if (_p1.Arrows == 12)
                         {
                             Console.WriteLine("Your quiver is full already. You simply missed you turn...");
+                            Thread.Sleep(3600);
                         }
                         else
                         {
@@ -178,6 +183,7 @@ namespace ArcheyGame
                         if (_distance == 1)
                         {
                             Console.WriteLine("You are to close to your enemy. You simply missed you turn...");
+                            Thread.Sleep(3600);
                         }
                         else
                         {
@@ -199,6 +205,7 @@ namespace ArcheyGame
             if (_p2.PlayerLifePoints == 0)
             {
                 Console.WriteLine(_p2.Name + "\n is killed... Game is over!");
+                Thread.Sleep(2500);
                 _p1.Winner = true;
             }
             Console.Clear();
@@ -213,10 +220,16 @@ namespace ArcheyGame
             {
                 Console.WriteLine("\nTarget is HIT!");
                 _p2.PlayerLifePoints--;
+                Thread.Sleep(2000);
+            }
+            else
+            {
+                Console.WriteLine("\nIt's a miss... :(");
+                Thread.Sleep(2000);
             }
             return;
         }
-        internal static void Player2Turn(Player _p1, Player _p2, byte _distance, bool _pvpMenuSelection, int _menuItem, int _i)
+        internal static void Player2Turn(Player _p1, Player _p2, ref byte _distance, bool _pvpMenuSelection, int _menuItem, int _i)
         {
             Console.WriteLine("<-- * <-- * <-- * <-- * <-- * <-- * <--");
             Console.WriteLine(_i + ". ROUND:\n" + "\nPrepare yourself, " + _p2.Name + ", it is your turn!");
@@ -255,6 +268,7 @@ namespace ArcheyGame
                         if (_p1.Arrows == 12)
                         {
                             Console.WriteLine("Your quiver is full already. You simply missed you turn...");
+                            Thread.Sleep(3600);
                         }
                         else
                         {
@@ -267,6 +281,7 @@ namespace ArcheyGame
                         if (_distance == 1)
                         {
                             Console.WriteLine("You are to close to your enemy. You simply missed you turn...");
+                            Thread.Sleep(3600);
                         }
                         else
                         {
@@ -288,6 +303,7 @@ namespace ArcheyGame
             if (_p1.PlayerLifePoints == 0)
             {
                 Console.WriteLine(_p1.Name + "\n is killed... Game is over!");
+                Thread.Sleep(2500);
                 _p2.Winner = true;
             }
             Console.Clear();
@@ -302,6 +318,12 @@ namespace ArcheyGame
             {
                 Console.WriteLine("\nTarget is HIT!");
                 _p1.PlayerLifePoints--;
+                Thread.Sleep(2000);
+            }
+            else
+            {
+                Console.WriteLine("\nIt's a miss... :(");
+                Thread.Sleep(2000);
             }
             return;
         }
